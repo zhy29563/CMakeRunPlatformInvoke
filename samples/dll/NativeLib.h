@@ -20,4 +20,6 @@ extern "C"
 
     __declspec(dllexport) wchar_t* __stdcall GetStringCoTaskMemAlloc();
     __declspec(dllexport) void     __stdcall FreeCoTaskMemAllocMemory(void* pBuffer);
+
+    __declspec(dllexport) int __stdcall Multiply(const int factorA, const int factorB);
 }

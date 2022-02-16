@@ -114,3 +114,8 @@ void FreeCoTaskMemAllocMemory(void* pBuffer)
 		pBuffer = nullptr;
 	}
 }
+
+int Multiply(const int factorA, const int factorB)
+{
+    return factorA * factorB;
+}
