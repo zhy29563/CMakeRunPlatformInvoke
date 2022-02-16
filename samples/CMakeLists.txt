@@ -25,14 +25,15 @@ add_executable(HelloWorldWithStandardCRuntime   "sources/HelloWorldWithStandardC
 add_executable(HelloWorldWithWin32              "sources/HelloWorldWithWin32.cs")
 
 add_executable(DllImportAttributeSample         "sources/DllImportAttributeSample.cs")
-
+add_executable(ReleaseUnmanagedMemory           "sources/ReleaseUnmanagedMemory.cs")
 ##############################################################################
 # 项目配置
 set(target_names
     HelloWorldWithCustomedFunction
     HelloWorldWithStandardCRuntime
     HelloWorldWithWin32
-    DllImportAttributeSample)
+    DllImportAttributeSample
+    ReleaseUnmanagedMemory)
 
 foreach(target_name ${target_names})
 target_compile_options(${target_name} PRIVATE "-langversion:latest")
