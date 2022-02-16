@@ -20,20 +20,27 @@ add_subdirectory(NativeLib)
 
 ##############################################################################
 # CS测试
-add_executable(HelloWorldWithCustomedFunction "sources/HelloWorldWithCustomedFunction.cs")
-add_executable(HelloWorldWithStandardCRuntime "sources/HelloWorldWithStandardCRuntime.cs")
-add_executable(HelloWorldWithWin32            "sources/HelloWorldWithWin32.cs")
+add_executable(HelloWorldWithCustomedFunction   "sources/HelloWorldWithCustomedFunction.cs")
+add_executable(HelloWorldWithStandardCRuntime   "sources/HelloWorldWithStandardCRuntime.cs")
+add_executable(HelloWorldWithWin32              "sources/HelloWorldWithWin32.cs")
+
+add_executable(DllImportAttributeSample         "sources/DllImportAttributeSample.cs")
 
 ##############################################################################
 # 项目配置
 set(target_names
     HelloWorldWithCustomedFunction
-    HelloWorldWithStandardCRuntime)
+    HelloWorldWithStandardCRuntime
+    HelloWorldWithWin32
+    DllImportAttributeSample)
 
 foreach(target_name ${target_names})
 target_compile_options(${target_name} PRIVATE "-langversion:latest")
 target_compile_options(${target_name} PRIVATE "-platform:x64")
 set_target_properties(${target_name} PROPERTIES VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.8")
-set_target_properties(${target_name} PROPERTIES VS_DOTNET_REFERENCES "Microsoft.CSharp;System;System.Core")
+set_target_properties(${target_name} PROPERTIES VS_DOTNET_REFERENCES "Microsoft.CSharp;
+                                                                      System;
+                                                                      System.Core;
+                                                                      mscorlib")
 target_link_libraries(${target_name} PRIVATE NativeLib)
 endforeach()
