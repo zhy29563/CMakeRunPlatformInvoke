@@ -87,4 +87,5 @@ extern "C"
     __declspec(dllexport) void __stdcall GetEmployeeInfo2(PMSEMPLOYEE2 pEmployee);
     __declspec(dllexport) void __stdcall TestStructInStructByRef(PPERSON pPerson);
     __declspec(dllexport) void __stdcall TestStructInStructByVal(PPERSON2 pPerson);
+    __declspec(dllexport) void __stdcall TestStructArgumentByRef(PSIMPLESTRUCT pStruct);
 }

@@ -167,6 +167,18 @@ namespace PlatformInvoke
         [DllImport("NativeLib.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern void TestStructInStructByVal(ref Person2 person);
 
+        // 将托管类/结构体封送给非托管结构体的区别
+        // 在.NET平台下类与结构体的主要区别是：
+        //  - 类是引用类型，结构体是值类型
+        //  - 类字段的默认访问属性为【private】，结构体的默认访问属性为【public】
+        
+        // 除以下的区别外，封送托管类与托管结构体到非托管结构体大体相同。
+        // | UnmanagedStruct    | ManagedStruct         | ManagedClass         |
+        // | ------------------ | --------------------- | -------------------- |
+        // | UnmanagedStruct    | ManagedStruct         |                      |
+        // | UnmanagedStruct *  | ref/out ManagedStruct | ManagedClass         |
+        // | UnmanagedStruct ** |                       | ref/out ManagedClass |
+
         private static void Main()
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////

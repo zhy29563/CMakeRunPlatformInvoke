@@ -25,6 +25,7 @@ add_executable(HandleException                  "sources/HandleException.cs")
 
 add_executable(MarshalString                    "sources/MarshalString.cs")
 add_executable(MarshalStruct                    "sources/MarshalStruct.cs")
+add_executable(MarhsalBlittableReference        "sources/MarhsalBlittableReference.cs")
 ##############################################################################
 # 项目配置
 set(target_names
@@ -35,7 +36,8 @@ set(target_names
     ReleaseUnmanagedMemory
     HandleException
     MarshalString
-    MarshalStruct)
+    MarshalStruct
+    MarhsalBlittableReference)
 
 foreach(target_name ${target_names})
 target_compile_options(${target_name} PRIVATE "-langversion:latest")

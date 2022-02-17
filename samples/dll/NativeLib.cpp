@@ -307,3 +307,4 @@ void TestStructInStructByVal(PPERSON2 pPerson)
 	setlocale(LC_ALL, "chs");
 	printf("姓 = %s\n名 = %s\n年龄 = %i\n\n",pPerson->name.last, pPerson->name.first, pPerson->age);
 }
+
