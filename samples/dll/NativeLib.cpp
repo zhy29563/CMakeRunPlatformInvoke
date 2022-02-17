@@ -6,6 +6,7 @@
 #include <combaseapi.h>
 #include <cwchar>
 #include <new>
+#include <clocale>
 
 void PrintMsg(const char *msg)
 {
@@ -172,4 +173,118 @@ wchar_t *TestStringAsResult(int id)
     auto *result = static_cast<wchar_t *>(CoTaskMemAlloc(bufferSize));
     swprintf_s(result, bufferSize / sizeof(wchar_t), L"Result of ID: %d", id);
     return result;
+}
+
+void ShowNativeStructSize(size_t size)
+{
+    // 支持中文字符显示
+    _wsetlocale(LC_ALL, L"chs");
+
+    wprintf(L"The size of unmanaged struct is (%d) bytes。\n", size);
+}
+
+void __cdecl TestStructArgumentByVal(SIMPLESTRUCT simpleStruct)
+{
+    ShowNativeStructSize(sizeof(SIMPLESTRUCT));
+    // 打印结构体数据
+    wprintf(L"\nRaw data of struct: int = %d, short = %d, float = %f, double = %f\n",
+            simpleStruct.intValue,
+            simpleStruct.shortValue,
+            simpleStruct.floatValue,
+            simpleStruct.doubleValue);
+
+    // 非托管函数中对结构体的字段进行改变，可以在托管方查看输入结构体是否改变
+    simpleStruct.intValue += 10;
+}
+
+void TestStructArgumentByRef(PSIMPLESTRUCT pStruct)
+{
+    ShowNativeStructSize(sizeof(SIMPLESTRUCT));
+
+    if (nullptr != pStruct)
+    {
+        // 打印初始数据
+        wprintf(L"\nRaw data of struct: int = %d, short = %d, float = %f, double = %f\n",
+                pStruct->intValue,
+                pStruct->shortValue,
+                pStruct->floatValue,
+                pStruct->doubleValue);
+
+        // 修改数据
+        pStruct->intValue++;
+        pStruct->shortValue++;
+        pStruct->floatValue += 1;
+        pStruct->doubleValue += 1;
+    }
+}
+
+PSIMPLESTRUCT TestReturnStruct(void)
+{
+    // 使用CoTaskMemAlloc分配内存
+    auto *const pStruct = static_cast<PSIMPLESTRUCT>(CoTaskMemAlloc(sizeof(SIMPLESTRUCT)));
+
+    pStruct->intValue = 5;
+    pStruct->shortValue = 4;
+    pStruct->floatValue = 3.0;
+    pStruct->doubleValue = 2.1;
+
+    return pStruct;
+}
+
+PSIMPLESTRUCT TestReturnNewStruct(void)
+{
+    // 使用new分配内存
+    auto *const pStruct = new SIMPLESTRUCT();
+
+    pStruct->intValue = 5;
+    pStruct->shortValue = 4;
+    pStruct->floatValue = 3.0;
+    pStruct->doubleValue = 2.1;
+
+    return pStruct;
+}
+
+void FreeStruct(PSIMPLESTRUCT pStruct)
+{
+    if (nullptr != pStruct)
+    {
+        delete pStruct;
+        pStruct = nullptr;
+    }
+}
+
+void TestReturnStructFromArg(PSIMPLESTRUCT *ppStruct)
+{
+    if (nullptr != ppStruct)
+    {
+        *ppStruct = static_cast<PSIMPLESTRUCT>(CoTaskMemAlloc(sizeof(SIMPLESTRUCT)));
+
+        (*ppStruct)->intValue = 5;
+        (*ppStruct)->shortValue = 4;
+        (*ppStruct)->floatValue = 3.0;
+        (*ppStruct)->doubleValue = 2.1;
+    }
+}
+
+void GetEmployeeInfo(const PMSEMPLOYEE pEmployee)
+{
+    if (nullptr != pEmployee)
+    {
+        pEmployee->employedYear = 2;
+        pEmployee->alias = static_cast<char *>(CoTaskMemAlloc(255));
+        pEmployee->displayName = static_cast<char *>(CoTaskMemAlloc(255));
+
+        strcpy_s(pEmployee->alias, 255, "xcui");
+        strcpy_s(pEmployee->displayName, 255, "Xiaoyuan Cui");
+    }
+}
+
+void GetEmployeeInfo2(PMSEMPLOYEE2 pEmployee)
+{
+    if (nullptr != pEmployee)
+    {
+        pEmployee->employedYear = 2;
+        strcpy_s(pEmployee->alias, 255, "jizhou");
+        strcpy_s(pEmployee->displayName, 255, "Jizhou Huang");
+    }
 }

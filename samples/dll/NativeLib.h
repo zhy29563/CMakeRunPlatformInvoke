@@ -1,6 +1,30 @@
 #pragma once
 #include <cstdio>
 
+typedef struct _SIMPLESTRUCT
+{
+    int intValue;
+    short shortValue;
+    float floatValue;
+    double doubleValue;
+} SIMPLESTRUCT, *PSIMPLESTRUCT;
+
+typedef struct _MSEMPLOYEE
+{
+    int employeeID;
+    short employedYear;
+    char *displayName;
+    char *alias;
+} MSEMPLOYEE, *PMSEMPLOYEE;
+
+typedef struct _MSEMPLOYEE2
+{
+    UINT employeeID;
+    short employedYear;
+    char displayName[255];
+    char alias[255];
+} MSEMPLOYEE2, *PMSEMPLOYEE2;
+
 extern "C"
 {
     __declspec(dllexport) void __stdcall PrintMsg(const char *msg);
@@ -33,4 +57,13 @@ extern "C"
 
     __declspec(dllexport) void __stdcall TestStringArgumentOut(const int id, wchar_t **ppString);
     __declspec(dllexport) wchar_t *__stdcall TestStringAsResult(int id);
+
+    __declspec(dllexport) void __stdcall TestStructArgumentByVal(SIMPLESTRUCT simpleStruct);
+    __declspec(dllexport) void __stdcall TestStructArgumentByRef(PSIMPLESTRUCT pStruct);
+    __declspec(dllexport) PSIMPLESTRUCT __stdcall TestReturnStruct(void);
+    __declspec(dllexport) PSIMPLESTRUCT __stdcall TestReturnNewStruct(void);
+    __declspec(dllexport) void __stdcall FreeStruct(PSIMPLESTRUCT pStruct);
+    __declspec(dllexport) void __stdcall TestReturnStructFromArg(PSIMPLESTRUCT *ppStruct);
+    __declspec(dllexport) void __stdcall GetEmployeeInfo(const PMSEMPLOYEE pEmployee);
+    __declspec(dllexport) void __stdcall GetEmployeeInfo2(PMSEMPLOYEE2 pEmployee);
 }

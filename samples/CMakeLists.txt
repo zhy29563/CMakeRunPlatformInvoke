@@ -24,6 +24,7 @@ add_executable(ReleaseUnmanagedMemory           "sources/ReleaseUnmanagedMemory.
 add_executable(HandleException                  "sources/HandleException.cs")
 
 add_executable(MarshalString                    "sources/MarshalString.cs")
+add_executable(MarshalStruct                    "sources/MarshalStruct.cs")
 ##############################################################################
 # 项目配置
 set(target_names
@@ -33,7 +34,8 @@ set(target_names
     DllImportAttributeSample
     ReleaseUnmanagedMemory
     HandleException
-    MarshalString)
+    MarshalString
+    MarshalStruct)
 
 foreach(target_name ${target_names})
 target_compile_options(${target_name} PRIVATE "-langversion:latest")
