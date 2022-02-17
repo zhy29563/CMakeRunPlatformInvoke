@@ -22,6 +22,8 @@ add_executable(HelloWorldWithWin32              "sources/HelloWorldWithWin32.cs"
 add_executable(DllImportAttributeSample         "sources/DllImportAttributeSample.cs")
 add_executable(ReleaseUnmanagedMemory           "sources/ReleaseUnmanagedMemory.cs")
 add_executable(HandleException                  "sources/HandleException.cs")
+
+add_executable(MarshalString                    "sources/MarshalString.cs")
 ##############################################################################
 # 项目配置
 set(target_names
@@ -30,7 +32,8 @@ set(target_names
     HelloWorldWithWin32
     DllImportAttributeSample
     ReleaseUnmanagedMemory
-    HandleException)
+    HandleException
+    MarshalString)
 
 foreach(target_name ${target_names})
 target_compile_options(${target_name} PRIVATE "-langversion:latest")
