@@ -43,6 +43,29 @@ namespace PlatformInvoke
         public string Alias;
     }
 
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct PersonName
+    {
+        public string first;
+        public string last;
+        public string displayName;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Person
+    {
+        public IntPtr name;
+        public int age;
+    }
+
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Person2
+    {
+        public PersonName name;
+        public int age;
+    }
+
     internal class Program
     {
         // 结构体作为输入参数(值传递)
@@ -110,15 +133,15 @@ namespace PlatformInvoke
         // 封送结构体中的布尔字段
 
         // 非托管端
-        // typedef struct _MSEMPLOEE_EX
-        // {
+        //  typedef struct _MSEMPLOEE_EX
+        //  {
         //      UINT        employessID;
         //      wchar_t*    displayName;
         //      char*       alias;
         //      bool        isInRedmond;        // 1字节
         //      short       employedYear;
         //      BOOL        idFrame;            // 4字节
-        // } MSEMPLOYEE_EX, *PMSEMPLOYEE_EX;
+        //  } MSEMPLOYEE_EX, *PMSEMPLOYEE_EX;
 
         // 托管端
         //  [StructLayout(LoyoutKing.Sequential)]
@@ -135,6 +158,14 @@ namespace PlatformInvoke
         //      [MarshalAs(UnmanagedType.Bool)]
         //      public bool IsFrame;
         //  }
+
+        // 封送结构体字段指向结构体的指针
+        [DllImport("NativeLib.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void TestStructInStructByRef(ref Person person);
+
+        // 封送结构体字段为结构体变量
+        [DllImport("NativeLib.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void TestStructInStructByVal(ref Person2 person);
 
         private static void Main()
         {
@@ -157,6 +188,7 @@ namespace PlatformInvoke
                                 simpleStruct.doubleValue);
                 Console.WriteLine("================================================");
             }
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // 结构体作为输入参数(址传递)
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -180,6 +212,7 @@ namespace PlatformInvoke
                     argStruct.doubleValue);
                 Console.WriteLine("================================================");
             }
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // 封送从函数内部返回结构体(返回值)
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -281,10 +314,49 @@ namespace PlatformInvoke
                 Console.WriteLine("姓名: {0}", employee.DisplayName);
                 Console.WriteLine("================================================");
             }
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // 封送结构体中的布尔字段
+            // 封送结构体字段指向结构体的指针
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+            {
+                var name = new PersonName {last = "Cui", first = "Xiaoyuan"};
+                var person = new Person {age = 27};
+
+                var nameBuffer = Marshal.AllocCoTaskMem(Marshal.SizeOf(name));
+                Marshal.StructureToPtr(name, nameBuffer, false);
+
+                person.name = nameBuffer;
+
+                Console.WriteLine("调用前显示姓名为：{0}", name.displayName);
+                TestStructInStructByRef(ref person);
+
+                var newValue = (PersonName)Marshal.PtrToStructure(person.name, typeof(PersonName));
+
+                Marshal.DestroyStructure(nameBuffer, typeof(PersonName));
+
+                Console.WriteLine("调用后显示姓名为：{0}", newValue.displayName);
+                Console.WriteLine("================================================");
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // 封送结构体字段为结构体变量
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            {
+                Console.WriteLine("\n结构体作为值类型成员");
+                var person = new Person2
+                {
+                    name =
+                    {
+                        last = "Huang", 
+                        first = "Jizhou", 
+                        displayName = string.Empty
+                    },
+                    age = 26
+                };
+
+                TestStructInStructByVal(ref person);
+                Console.WriteLine("================================================");
+            }
 
             Console.WriteLine("\r\n按任意键退出...");
             Console.Read();

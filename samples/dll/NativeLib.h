@@ -19,11 +19,30 @@ typedef struct _MSEMPLOYEE
 
 typedef struct _MSEMPLOYEE2
 {
-    UINT employeeID;
+    unsigned int employeeID;
     short employedYear;
     char displayName[255];
     char alias[255];
 } MSEMPLOYEE2, *PMSEMPLOYEE2;
+
+typedef struct _PERSONNAME
+{
+	char* first;
+	char* last;
+	char* displayName;
+} PERSONNAME, * PPERSONNAME;
+
+typedef struct _PERSON
+{
+	PPERSONNAME pName;
+	int age;
+} PERSON, * PPERSON;
+
+typedef struct _PERSON2
+{
+	PERSONNAME name;
+	int age;
+} PERSON2, * PPERSON2;
 
 extern "C"
 {
@@ -66,4 +85,6 @@ extern "C"
     __declspec(dllexport) void __stdcall TestReturnStructFromArg(PSIMPLESTRUCT *ppStruct);
     __declspec(dllexport) void __stdcall GetEmployeeInfo(const PMSEMPLOYEE pEmployee);
     __declspec(dllexport) void __stdcall GetEmployeeInfo2(PMSEMPLOYEE2 pEmployee);
+    __declspec(dllexport) void __stdcall TestStructInStructByRef(PPERSON pPerson);
+    __declspec(dllexport) void __stdcall TestStructInStructByVal(PPERSON2 pPerson);
 }

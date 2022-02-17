@@ -288,3 +288,22 @@ void GetEmployeeInfo2(PMSEMPLOYEE2 pEmployee)
         strcpy_s(pEmployee->displayName, 255, "Jizhou Huang");
     }
 }
+
+void TestStructInStructByRef(PPERSON pPerson)
+{
+    const auto firstLen = strlen(pPerson->pName->first);
+    const auto lastLen = strlen(pPerson->pName->last);
+
+    auto* const temp = static_cast<char*>(CoTaskMemAlloc(sizeof(char) * (firstLen + lastLen + 2)));
+	sprintf_s(temp, firstLen + lastLen + 2, "%s %s", pPerson->pName->last, pPerson->pName->first);
+
+	CoTaskMemFree(pPerson->pName->displayName);
+	pPerson->pName->displayName = temp;
+}
+
+void TestStructInStructByVal(PPERSON2 pPerson)
+{
+	// 支持中文字符显示
+	setlocale(LC_ALL, "chs");
+	printf("姓 = %s\n名 = %s\n年龄 = %i\n\n",pPerson->name.last, pPerson->name.first, pPerson->age);
+}
