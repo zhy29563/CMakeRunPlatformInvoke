@@ -139,3 +139,45 @@ extern "C" inline __declspec(dllexport) void __stdcall TMSC_ParameterIsStructPoi
     std::cout << "unmanaged, the id is " << ps->id << std::endl;
     std::cout << "unmanaged, the name is " << ps->name << std::endl;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 方向属性
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+typedef struct _TestDirection
+{
+    int id;
+    char *name;
+} TestDirection, *PTestDirection, **PPTestDirection;
+
+// 非托管函数的参数是对象而非指针或引用
+extern "C" inline __declspec(dllexport) void __stdcall Direction_ParameterIsStruct(TestDirection d)
+{
+    d.name = static_cast<char *>(CoTaskMemAlloc(255));
+    strcpy_s(d.name, 255, "zhang san");
+
+    std::cout << "=========================================" << std::endl;
+    std::cout << "unmanaged, the id is " << d.id << std::endl;
+    std::cout << "unmanaged, the name is " << d.name << std::endl;
+}
+
+extern "C" inline __declspec(dllexport) void __stdcall Direction_ParameterIsPointer(PTestDirection pd)
+{
+    pd->name = static_cast<char *>(CoTaskMemAlloc(255));
+    strcpy_s(pd->name, 255, "li si");
+    std::cout << "=========================================" << std::endl;
+    std::cout << "unmanaged, the id is " << pd->id << std::endl;
+    std::cout << "unmanaged, the name is " << pd->name << std::endl;
+}
+
+extern "C" inline __declspec(dllexport) void __stdcall Direction_ParameterIsPointerPointer(PPTestDirection pps)
+{
+    *pps = static_cast<PTestDirection>(CoTaskMemAlloc(sizeof(TestDirection)));
+    PTestDirection ps = *pps;
+    ps->id = 88888;
+    ps->name = static_cast<char *>(CoTaskMemAlloc(255));
+    strcpy_s(ps->name, 255, "wang wu");
+    std::cout << "=========================================" << std::endl;
+    std::cout << "unmanaged, the id is " << ps->id << std::endl;
+    std::cout << "unmanaged, the name is " << ps->name << std::endl;
+}
+

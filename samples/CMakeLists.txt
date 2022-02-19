@@ -27,6 +27,7 @@ add_executable(MarshalString                    "sources/MarshalString.cs")
 add_executable(MarshalStruct                    "sources/MarshalStruct.cs")
 add_executable(MarhsalBlittableReference        "sources/MarhsalBlittableReference.cs")
 add_executable(MarshalClass                     "sources/MarshalClass.cs")
+add_executable(MarshalWithDirectionProperty     "sources/MarshalWithDirectionProperty.cs")
 ##############################################################################
 # 项目配置
 set(target_names
@@ -39,7 +40,8 @@ set(target_names
     MarshalString
     MarshalStruct
     MarhsalBlittableReference
-    MarshalClass)
+    MarshalClass
+    MarshalWithDirectionProperty)
 
 foreach(target_name ${target_names})
 target_compile_options(${target_name} PRIVATE "-langversion:latest")
