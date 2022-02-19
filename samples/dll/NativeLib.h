@@ -181,3 +181,48 @@ extern "C" inline __declspec(dllexport) void __stdcall Direction_ParameterIsPoin
     std::cout << "unmanaged, the name is " << ps->name << std::endl;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 字符数组
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline void ReverseAnsiStringInPlace(char *rawString)
+{
+    const auto strLength = static_cast<int>(strlen(rawString));
+
+    for (auto i = 0; i < strLength / 2; i++)
+    {
+        const auto tempChar = rawString[i];
+        rawString[i] = rawString[strLength - 1 - i];
+        rawString[strLength - 1 - i] = tempChar;
+    }
+}
+
+// 字符数组作为参数输入
+extern "C" inline __declspec(dllexport) void __stdcall TestArrayOfString(char *ppStrArray[], int size)
+{
+    for (auto i = 0; i < size; i++)
+    {
+        ReverseAnsiStringInPlace(ppStrArray[i]);
+    }
+}
+
+// 字符数组作为参数输出
+extern "C" inline __declspec(dllexport) int __stdcall TestRefArrayOfString(void **strArray, int *size)
+{
+    auto const elementCount = 10;
+    const int bytesForPointerArray = sizeof(wchar_t *) * elementCount;
+
+    // 为字符串指针数组分配内存
+    auto *const pArray = static_cast<wchar_t **>(CoTaskMemAlloc(bytesForPointerArray));
+
+    // 为每个字符串指针分配内存
+    for (int i = 0; i < elementCount; i++)
+    {
+        pArray[i] = static_cast<wchar_t *>(CoTaskMemAlloc(255 * sizeof(wchar_t)));
+        swprintf_s(pArray[i], 255, L"string %d", i);
+    }
+
+    *strArray = pArray;
+    *size = elementCount;
+
+    return elementCount;
+}

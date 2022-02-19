@@ -28,6 +28,7 @@ add_executable(MarshalStruct                    "sources/MarshalStruct.cs")
 add_executable(MarhsalBlittableReference        "sources/MarhsalBlittableReference.cs")
 add_executable(MarshalClass                     "sources/MarshalClass.cs")
 add_executable(MarshalWithDirectionProperty     "sources/MarshalWithDirectionProperty.cs")
+add_executable(MarshalCharArray                 "sources/MarshalCharArray.cs")
 ##############################################################################
 # 项目配置
 set(target_names
