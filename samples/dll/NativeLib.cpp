@@ -1,12 +1,5 @@
 #include <NativeLib.h>
-#include <cstring>
-#include <cstdlib>
-#include <combaseapi.h>
-#include <corecrt_wstdio.h>
-#include <combaseapi.h>
-#include <cwchar>
-#include <new>
-#include <clocale>
+
 
 void PrintMsg(const char *msg)
 {

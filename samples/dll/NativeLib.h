@@ -1,5 +1,14 @@
 #pragma once
 #include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <combaseapi.h>
+#include <corecrt_wstdio.h>
+#include <combaseapi.h>
+#include <cwchar>
+#include <new>
+#include <clocale>
+#include <iostream>
 
 typedef struct _SIMPLESTRUCT
 {
@@ -27,22 +36,22 @@ typedef struct _MSEMPLOYEE2
 
 typedef struct _PERSONNAME
 {
-	char* first;
-	char* last;
-	char* displayName;
-} PERSONNAME, * PPERSONNAME;
+    char *first;
+    char *last;
+    char *displayName;
+} PERSONNAME, *PPERSONNAME;
 
 typedef struct _PERSON
 {
-	PPERSONNAME pName;
-	int age;
-} PERSON, * PPERSON;
+    PPERSONNAME pName;
+    int age;
+} PERSON, *PPERSON;
 
 typedef struct _PERSON2
 {
-	PERSONNAME name;
-	int age;
-} PERSON2, * PPERSON2;
+    PERSONNAME name;
+    int age;
+} PERSON2, *PPERSON2;
 
 extern "C"
 {
@@ -88,4 +97,45 @@ extern "C"
     __declspec(dllexport) void __stdcall TestStructInStructByRef(PPERSON pPerson);
     __declspec(dllexport) void __stdcall TestStructInStructByVal(PPERSON2 pPerson);
     __declspec(dllexport) void __stdcall TestStructArgumentByRef(PSIMPLESTRUCT pStruct);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 托管结构体与拖过类作为封送参数的区别(TestManagedStructAndClass，简称 TMSC)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+typedef struct _TestManagedStructAndClass
+{
+    int id;
+    char *name;
+} TestManagedStructAndClass, *PTestManagedStructAndClass, **PPTestManagedStructAndClass;
+// 非托管函数的参数为结构体，在非托管函数的托管声明中仅能使用托管结构体作为参数
+extern "C" inline __declspec(dllexport) void __stdcall TMSC_ParameterIsStruct(TestManagedStructAndClass s)
+{
+    s.name = static_cast<char *>(CoTaskMemAlloc(255));
+    strcpy_s(s.name, 255, "zhang san");
+
+    std::cout << "=========================================" << std::endl;
+    std::cout << "unmanaged, the id is " << s.id << std::endl;
+    std::cout << "unmanaged, the name is " << s.name << std::endl;
+}
+// 非托管函数的参数为结构体指针，在非托管函数的托管声明中既可以使用托管结构体作为参数，也可以使用托管类作为参数
+extern "C" inline __declspec(dllexport) void __stdcall TMSC_ParameterIsStructPointer(PTestManagedStructAndClass ps)
+{
+    ps->name = static_cast<char *>(CoTaskMemAlloc(255));
+    strcpy_s(ps->name, 255, "li si");
+    std::cout << "=========================================" << std::endl;
+    std::cout << "unmanaged, the id is " << ps->id << std::endl;
+    std::cout << "unmanaged, the name is " << ps->name << std::endl;
+}
+
+// 非托管函数的参数为二级结构体指针，在非托管函数的托管声明中仅可以使用托管类作为参数
+extern "C" inline __declspec(dllexport) void __stdcall TMSC_ParameterIsStructPointerPointer(PPTestManagedStructAndClass pps)
+{
+    *pps = static_cast<PTestManagedStructAndClass>(CoTaskMemAlloc(sizeof(TestManagedStructAndClass)));
+    PTestManagedStructAndClass ps = *pps;
+    ps->id = 88888;
+    ps->name = static_cast<char *>(CoTaskMemAlloc(255));
+    strcpy_s(ps->name, 255, "wang wu");
+
+    std::cout << "=========================================" << std::endl;
+    std::cout << "unmanaged, the id is " << ps->id << std::endl;
+    std::cout << "unmanaged, the name is " << ps->name << std::endl;
 }

@@ -26,6 +26,7 @@ add_executable(HandleException                  "sources/HandleException.cs")
 add_executable(MarshalString                    "sources/MarshalString.cs")
 add_executable(MarshalStruct                    "sources/MarshalStruct.cs")
 add_executable(MarhsalBlittableReference        "sources/MarhsalBlittableReference.cs")
+add_executable(MarshalClass                     "sources/MarshalClass.cs")
 ##############################################################################
 # 项目配置
 set(target_names
@@ -37,7 +38,8 @@ set(target_names
     HandleException
     MarshalString
     MarshalStruct
-    MarhsalBlittableReference)
+    MarhsalBlittableReference
+    MarshalClass)
 
 foreach(target_name ${target_names})
 target_compile_options(${target_name} PRIVATE "-langversion:latest")
